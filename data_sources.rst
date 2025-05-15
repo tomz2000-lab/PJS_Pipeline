@@ -1,0 +1,203 @@
+Data Sources
+=================
+
+This section gives a comprehensive overview on where the pipeline processes which data.
+
+The different section contain links to the regarding sections in the :ref:`extraction.py<Extraction Module>`-code.
+
+1. ID
+-----
+
+This ``ID`` is automatically assigned by the SQLite database and serves as a unique identifier for each entry. 
+It facilitates efficient tracking and management of job records within the database.
+
+2. Mongo-DB ID
+--------------
+
+The ``Mongo-DB ID`` is generated as a MongoDB ObjectId during initial data extraction, then repurposed as the unique primary 
+key in the :ref:`SQLite-DB<SQlite Module>`. This dual-role implementation ensures:
+
+* Deterministic Identification
+* Unique Data-Entries
+* Referential Integrity
+
+* :func:`Click here<sqlite.job_exists>` to see how this check works
+
+3. URL
+------
+
+he URL field is programmatically extracted from raw scraping outputs using a hybrid approach combining:
+
+1. Structural parsing of webpage DOM elements
+2. Hypertext feature analysis (e.g., <a> href attributes)
+
+This extracted URL undergoes domain segmentation through :func:extract_entities_from_json`<extraction.extract_entities_from_json>` 
+
+to derive the :ref:`Portal Name<5. Portal Name>`, using:
+* Regular expression-based TLD (Top-Level Domain) identification
+* Contextual disambiguation against known hosting platforms
+
+:func:`Click here<extraction.extract_entities_from_json>` to learn more about the extraction of the URL
+
+4. Job Title
+------------
+
+The job title is labeled as "Job Title" in the raw data. This field is subsequently used as input for the :ref:`Category-LLM<16. Category>` 
+to determine the appropriate job category.
+
+5. Portal Name
+--------------
+
+This is name extracted from the :ref:`URL<3. URL>` using regex.
+
+* :func:`Click here<extraction.extract_entities_from_json>` and :func:`here<extraction.extract_website_name>` to see how the Portal Name is extracted
+
+6. Date
+-------
+
+Data Provenance:
+
+* Stepstone jobs: Dates programmatically extracted from datePosted schema markup
+* Indeed jobs: Null values imputed with current UTC timestamp via datetime.utcnow()
+
+Normalization Pipeline:
+
+* Temporal metadata stripped to day granularity
+* All values converted to ISO 8601-compliant date format (dd.mm.yyyy)
+* Timezone and time-of-day metadata discarded
+
+Temporal validity contingent upon daily scraping intervals.
+
+* :func:`Click here<extraction.get_formatted_date>` for the date extraction and cleaning
+
+7. Location
+-----------
+
+Raw location strings from location or joblocationtext (stepstone or indeed) undergo heuristic normalization:
+
+* Postal code removal via regex pattern matching (\b\d{5}\b)
+* Locale standardization (e.g., "Garching bei München" → "Garching")
+* Case folding and diacritic removal
+
+Prioritized search sequence from english offline ``cities+states+countries.json``-database:
+
+* Exact match in German administrative divisions without translation
+* Extended search across global entries if no german matches and translates them back to german
+* Usage of predefined state translations to avoid misspellings from english to german
+
+:func:`extraction.normalize_location_string`: Noise reduction and lexical validation
+:func:`extraction.remove_leading_postal_code`: Postal code stripping
+:func:`extraction.get_state_and_country`: Database query with fallback logic
+:func:`extraction.validate_city`: German locale verification
+:func:`extraction.extract_entities_from_json`: Translation error correction
+
+
+The location is also directly given in the scraping data as location or joblocationtext.
+
+After ectracting it, the location name gets cleaned for better processing and less noisy data. (e.g. Garching bei München -> Garching)
+
+It then gets searched for in an offline json-database togehter with its state and country. 
+Here the german search is prefered as long as there is a direct match in the germany-part of the document.
+When there is none the code searches the whole document for matches.
+
+A further point here is the tranlation of the names due to the english nature of the json-database. 
+In this stpe the original name without tranlation is being searched first (using the method explained above).
+If there is no match the name gets translated into english and then searched for.
+This helps to mitigate translation mistakes, e.g. Hannover (GER) -> Hanover (ENG) -> Location: USA (origionally Germany)
+
+* :func:`Click here<extraction.get_state_and_country>` to see the extraction from the json-database
+* :func:`Click here<extraction.normalize_location_string>` and :func:`here<extraction.remove_leading_postal_code>` for the normalization of the location
+* :func:`Click here<extraction.extract_entities_from_json>` for the handling/translation of the found locations
+* :func:`Click here<extraction.validate_city>` which checks if the found city has a german match
+
+8. State
+--------
+
+This is inferred from the json-database described in :ref:`Locations<7. Location>`.
+
+9. Country
+----------
+
+For country assignment, Germany is set as the default when the location name matches an entry in the German section of the json-database. 
+If no direct match is found, the country associated with the corresponding entry in the global database is used instead. 
+
+For further details, see :ref:Locations<7. Location>.
+
+
+10. Company
+-----------
+
+The Company is given in the scraping data as Company Name.
+It is taken directly from there and put into the SQLite-Database.
+
+11. Company Size
+----------------
+
+The company size attribute is available exclusively for a subset of stepstone data, typically provided within the CompanyInfo list segment, 
+most often as the final element. In the absence of this information, the pipeline defaults to outputting "Keine Angaben." 
+
+Reported company sizes are presented as variable ranges, which are subsequently mapped into standardized categorical groups for downstream 
+dashboard integration and analysis.
+
+* :func:`Click here<extraction.extract_company_size>` for the company size extraction
+* :func:`Click here<extraction.categorize_company_size>` for the categorization of the sizes
+
+12. Time Model
+--------------
+
+The time model is identified through a combination of synonym recognition and fuzzy string matching algorithms. The extraction pipeline targets 
+specific segments of the JSON data, adapting its search strategy based on the data source: for stepstone, relevant signal words are located exclusively 
+within the lists -> company section, which consolidates all pertinent information; for indeed, the search is performed across the paragraphs section. 
+This approach ensures robust detection of time model descriptors across heterogeneous data structures.
+
+* :func:`Click here<extraction.extract_entities_from_json>` for the synonym handling and Time Model Extraction
+
+13. Position
+------------
+
+This part works simmilar to the :ref:`Time Model<12. Time Model>`.
+
+* :func:`Click here<extraction.extract_entities_from_json>` for the synonym handling and Position extraction
+
+14. Employment Type
+-------------------
+
+The Employment Type also works with the same synonym-logic as the :ref:`Time Model<12. Time Model>` functionality.
+
+* :func:`Click here<extraction.extract_entities_from_json>` for the synonym handling and Employment-Type extraction
+
+15. Experience Required
+-----------------------
+
+The required experience is extracted using a Llama-model, which puts out either 0 or 1 using json formatting.
+
+* :ref:`Click here<II. Experience-Required>` to learn more about the implementation of the LLM
+* :func:`Click here<extraction.process_jobs>` to see the implementation of the model
+* :func:`Click here<extraction.parse_json_response>` to see how the json response is parsed
+
+16. Category
+------------
+
+The categories are also inferred by a LLM, which uses the same Llama base model as the :ref:`prior chapter<15. Experience Required>`.
+
+It takes the :ref:`Job Titles<4. Job Title>`, from the json-raw-data as input.
+
+* :ref:`Click here<3. Branche>` to learn more about the implementation of the LLM
+* :func:`Click here<extraction.process_jobs>` to see the handling of the model
+
+17. Incentives and Benfeits
+---------------------------
+
+Incentives and benefits are extracted and classified using a two-stage model pipeline. 
+
+The LLaMA-3.2-3B-Instruct model first identifies relevant incentive terms, processing structured content/benefits data for stepstone and 
+unstructured paragraphs for indeed. For indeed, explicitly listed incentives from the benefits part are also included and combined with 
+LLM-extracted terms to ensure comprehensive coverage. 
+
+These results are then classified into predefined categories using a Sentence-Transformer model based on semantic similarity. This approach maximizes recall, 
+reduces noise by separating extraction from classification, and ensures output consistency through json schema validation. 
+The methodology is both resource-efficient and robust across different portal data structures.
+
+* :ref:`Click here<III. Incentives Extraction>` to learn more about the implementation of the LLM
+* :ref:`Click here<1. Sentence-Transformer>` to learn more about the implementation of the Sentence-Transformer
+* :func:`Click here<extraction.process_jobs>` for the handling of the model
