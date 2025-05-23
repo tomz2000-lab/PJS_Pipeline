@@ -5,7 +5,6 @@ huggingface_hub
 transformers
 sentence-transformers
 torch
-geopy
 deep-translator
 pandas
 spacy
