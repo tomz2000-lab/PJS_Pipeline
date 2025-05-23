@@ -6,7 +6,8 @@ This repo includes:
    - a zip containing the country database (needs to be unpacked in the same directory)
    - a testing folder with all the necessary code and files to test the pipeline on accuracy and recall (see readme and docu for more information)
      
-2. documentation
+2. documentation 
+   - https://tomz2000-lab.github.io/PJS_Pipeline/
    - html files with a detailed documentation on all the code snippets and extraction details
    - also contains the code with the docstrings again to generate the documentation via sphinx
      
