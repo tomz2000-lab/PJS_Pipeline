@@ -1,0 +1,10 @@
+pymongo
+python-dotenv
+huggingface_hub
+transformers
+sentence-transformers
+torch
+deep-translator
+pandas
+json_repair
+sphinx
