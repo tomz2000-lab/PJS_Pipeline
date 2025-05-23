@@ -30,7 +30,6 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 
 # Add database and collection access
 db = client['scrapingData']
-#jobs_collection = db['stepstone_marketing_manageraccounting_manager']  
 
 def get_mongo_jobs(database_name=None):
     """
