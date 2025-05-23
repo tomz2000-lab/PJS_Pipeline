@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="english" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mongo_db &mdash; Using NLP for Job Data Structuring 23.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=46b02b20"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Using NLP for Job Data Structuring
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_sources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mongo_db.html">MongoDB Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sqlite.html">SQlite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction.html">Extraction Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_selection.html">Model Selection and Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance_explained.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../read_db.html">Read DB Module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Using NLP for Job Data Structuring</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mongo_db</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mongo_db</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mongo-DB Utility Module</span>
+
+<span class="sd">This module provides functionality for connecting to Mongo-DB, retrieving documents,</span>
+<span class="sd">and converting them to json format compatible with the existing pipeline. It includes</span>
+<span class="sd">functions for establishing database connections, yielding job documents from collections,</span>
+<span class="sd">and transforming Mongo-DB bson documents into standardized json structures.</span>
+
+<span class="sd">The module supports various job board formats with special handling for portal-specific</span>
+<span class="sd">fields (indeed or stepstone) and ObjectId conversion. It also includes a test function to verify connection</span>
+<span class="sd">and document conversion functionality.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.mongo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymongo.server_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerApi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bson.json_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">override</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Force reload and override existing env vars</span>
+<span class="n">uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MONGODB_URI&quot;</span><span class="p">)</span>  <span class="c1"># Use os.environ.get instead of os.getenv</span>
+<span class="c1">#uri = &quot;mongodb+srv://Tom:pwc123@scrapedata.4qouh.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=ScrapeData&quot;</span>
+
+<span class="c1"># Add fallback and debug output</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">uri</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>  <span class="c1"># Basic validation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Mongo-DB URI appears incomplete: </span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Fallback to hardcoded URI only during development</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;your_connection_string&quot;</span>  <span class="c1"># Only use during development</span>
+
+<span class="c1"># Create a new client and connect to the server</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">server_api</span><span class="o">=</span><span class="n">ServerApi</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">))</span>
+
+<span class="c1"># Add database and collection access</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;Test_Docker&#39;</span><span class="p">]</span>
+<span class="c1">#jobs_collection = db[&#39;stepstone_marketing_manageraccounting_manager&#39;]  </span>
+
+<div class="viewcode-block" id="get_mongo_jobs">
+<a class="viewcode-back" href="../mongo_db.html#mongo_db.get_mongo_jobs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_mongo_jobs</span><span class="p">(</span><span class="n">database_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generator to yield jobs from Mongo-DB with collection name, converted to compatible json format</span>
+<span class="sd">    </span>
+<span class="sd">    :param collection_name: Name of the Mongo-DB collection to query, defaults to None</span>
+<span class="sd">    :type collection_name: str, optional</span>
+<span class="sd">    :yield: Tuple containing the converted job document and collection name</span>
+<span class="sd">    :rtype: tuple(dict, str)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">database_name</span><span class="p">:</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="n">database_name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;Test_Docker&#39;</span><span class="p">]</span>  <span class="c1"># Default database</span>
+
+    <span class="c1"># Get all collection names in the database</span>
+    <span class="n">collection_names</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">list_collection_names</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">collection_name</span> <span class="ow">in</span> <span class="n">collection_names</span><span class="p">:</span>
+        <span class="n">collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({}):</span>
+            <span class="c1"># Convert Mongo-DB document to compatible json structure</span>
+            <span class="n">compatible_job</span> <span class="o">=</span> <span class="n">convert_mongo_to_compatible_json</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">compatible_job</span><span class="p">,</span> <span class="n">collection_name</span></div>
+
+
+
+<div class="viewcode-block" id="convert_mongo_to_compatible_json">
+<a class="viewcode-back" href="../mongo_db.html#mongo_db.convert_mongo_to_compatible_json">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_mongo_to_compatible_json</span><span class="p">(</span><span class="n">mongo_doc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert Mongo-DB document to a json structure compatible with the existing pipeline</span>
+<span class="sd">    </span>
+<span class="sd">    :param mongo_doc: Mongo-DB document to convert</span>
+<span class="sd">    :type mongo_doc: dict</span>
+<span class="sd">    :return: Compatible json structure for the pipeline</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a compatible structure by directly mapping fields</span>
+    <span class="n">compatible_job</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">mongo_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">mongo_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;URL&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;paragraphs&quot;</span><span class="p">:</span> <span class="n">mongo_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+        <span class="s2">&quot;lists&quot;</span><span class="p">:</span> <span class="n">mongo_doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lists&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="p">}</span>
+    
+    <span class="c1"># Preserve Indeed-specific fields</span>
+    <span class="k">if</span> <span class="s2">&quot;jobLocationText&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;jobLocationText&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;jobLocationText&quot;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;benefits&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;benefits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;benefits&quot;</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;paragraphs&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;datePosted&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;datePosted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;datePosted&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Company Name&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;Company Name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;Company Name&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Add title if available</span>
+    <span class="k">if</span> <span class="s2">&quot;Job Title&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span> <span class="ow">and</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;Job Title&quot;</span><span class="p">]:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;Job Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;Job Title&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s2">&quot;jobId&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Job ID: </span><span class="si">{</span><span class="n">mongo_doc</span><span class="p">[</span><span class="s1">&#39;jobId&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;Job #&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span><span class="p">:</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Job #: </span><span class="si">{</span><span class="n">mongo_doc</span><span class="p">[</span><span class="s1">&#39;Job #&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Convert ObjectId to string if needed</span>
+    <span class="k">if</span> <span class="s2">&quot;_id&quot;</span> <span class="ow">in</span> <span class="n">mongo_doc</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">],</span> <span class="s2">&quot;__str__&quot;</span><span class="p">):</span>
+        <span class="n">compatible_job</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mongo_doc</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">compatible_job</span></div>
+
+
+
+<div class="viewcode-block" id="test_conversion">
+<a class="viewcode-back" href="../mongo_db.html#mongo_db.test_conversion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_conversion</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the Mongo-DB document conversion and actual connection.</span>
+<span class="sd">    Prints out the first job in the database converted into json.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get one document</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">get_mongo_jobs</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Print the converted document</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converted document structure:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    
+    <span class="c1"># Check if the structure is compatible</span>
+    <span class="n">required_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;paragraphs&quot;</span><span class="p">,</span> <span class="s2">&quot;lists&quot;</span><span class="p">]</span>
+    <span class="n">missing_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">required_fields</span> <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">missing_fields</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Missing required fields: </span><span class="si">{</span><span class="n">missing_fields</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conversion successful! Document has all required fields.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Send a ping to confirm a successful connection</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;ping&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pinged your deployment. You successfully connected to Mongo-DB!&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+<span class="c1"># Run the test if this file is executed directly</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">test_conversion</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Tom Ziegler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
