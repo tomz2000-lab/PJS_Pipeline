@@ -20,13 +20,10 @@ import os
 
 load_dotenv(override=True)  # Force reload and override existing env vars
 uri = os.environ.get("MONGODB_URI")  # Use os.environ.get instead of os.getenv
-#uri = "mongodb+srv://Tom:pwc123@scrapedata.4qouh.mongodb.net/?retryWrites=true&w=majority&appName=ScrapeData"
 
 # Add fallback and debug output
 if not uri or len(uri) < 20:  # Basic validation
     print(f"Warning: Mongo-DB URI appears incomplete: {uri}")
-    # Fallback to hardcoded URI only during development
-    uri = "your_connection_string"  # Only use during development
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
