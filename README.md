@@ -15,3 +15,8 @@ This repo includes:
    - run sudo docker build -t my-pipeline . for creation
    - run sudo docker run \--gpus all \-v ~/.cache/huggingface:/root/.cache/huggingface \-v ~/docker-data/sqlite:/app/data \my-pipeline to run the docker (stores the llms in cache for reuse and uses all available gpus)
    - run sudo 0 * * * * docker run --rm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/docker-data/sqlite:/app/data my-pipeline if you want to run the docker every hour in the same manner as described above
+  
+My tasks in the project:
+- extract the raw data from the Mongo-DB
+- structure the information 
+- present them into a SQlite-Database for the Dashboard to use
