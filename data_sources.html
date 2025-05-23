@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="english" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Sources &mdash; Using NLP for Job Data Structuring 23.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46b02b20"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Main Module" href="main.html" />
+    <link rel="prev" title="Instructions" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Using NLP for Job Data Structuring
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Instructions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Sources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id">1. ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mongo-db-id">2. Mongo-DB ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#url">3. URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#job-title">4. Job Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portal-name">5. Portal Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#date">6. Date</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#location">7. Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state">8. State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#country">9. Country</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#company">10. Company</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#company-size">11. Company Size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-model">12. Time Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#position">13. Position</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#employment-type">14. Employment Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experience-required">15. Experience Required</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#category">16. Category</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#incentives-and-benfeits">17. Incentives and Benfeits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongo_db.html">MongoDB Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sqlite.html">SQlite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_selection.html">Model Selection and Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance_explained.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_db.html">Read DB Module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Using NLP for Job Data Structuring</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data Sources</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data_sources.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-sources">
+<h1>Data Sources<a class="headerlink" href="#data-sources" title="Link to this heading"></a></h1>
+<p>This section gives a comprehensive overview of where the pipeline processes which data.</p>
+<p>The different sections contain links to the regarding sections in the <a class="reference internal" href="extraction.html#module-extraction"><span class="std std-ref">extraction.py</span></a>-code.</p>
+<section id="id">
+<h2>1. ID<a class="headerlink" href="#id" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ID</span></code> is automatically assigned by the SQLite-Database and serves as a unique identifier for each entry.
+It facilitates efficient tracking and management of job records within the database.</p>
+</section>
+<section id="mongo-db-id">
+<h2>2. Mongo-DB ID<a class="headerlink" href="#mongo-db-id" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Mongo-DB</span> <span class="pre">ID</span></code> is generated as a MongoDB ObjectId during initial data extraction, then repurposed as the unique primary
+key in the <a class="reference internal" href="sqlite.html#module-sqlite"><span class="std std-ref">SQLite-DB</span></a>. This dual-role implementation ensures:</p>
+<ul class="simple">
+<li><p>Deterministic Identification</p></li>
+<li><p>Unique Data-Entries</p></li>
+<li><p>Referential Integrity</p></li>
+<li><p><a class="reference internal" href="sqlite.html#sqlite.job_exists" title="sqlite.job_exists"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to see how this check works</p></li>
+</ul>
+</section>
+<section id="url">
+<h2>3. URL<a class="headerlink" href="#url" title="Link to this heading"></a></h2>
+<p>The URL field is programmatically extracted from raw scraping outputs using a hybrid approach combining:</p>
+<ol class="arabic simple">
+<li><p>Structural parsing of webpage DOM elements</p></li>
+<li><p>Hypertext feature analysis (e.g., &lt;a&gt; href attributes)</p></li>
+</ol>
+<p>This extracted URL undergoes domain segmentation through :func:extract_entities_from_json`&lt;extraction.extract_entities_from_json&gt;`</p>
+<p>to derive the <a class="reference internal" href="#portal-name"><span class="std std-ref">Portal Name</span></a>, using:
+* Regular expression-based TLD (Top-Level Domain) identification
+* Contextual disambiguation against known hosting platforms</p>
+<p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to learn more about the extraction of the URL</p>
+</section>
+<section id="job-title">
+<h2>4. Job Title<a class="headerlink" href="#job-title" title="Link to this heading"></a></h2>
+<p>The job title is labeled as &quot;Job Title&quot; in the raw data. This field is subsequently used as input for the <a class="reference internal" href="#category"><span class="std std-ref">Category-LLM</span></a>
+to determine the appropriate job category.</p>
+</section>
+<section id="portal-name">
+<h2>5. Portal Name<a class="headerlink" href="#portal-name" title="Link to this heading"></a></h2>
+<p>This name is extracted from the <a class="reference internal" href="#url"><span class="std std-ref">URL</span></a> using regex.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> and <a class="reference internal" href="extraction.html#extraction.extract_website_name" title="extraction.extract_website_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">here</span></code></a> to see how the Portal Name is extracted</p></li>
+</ul>
+</section>
+<section id="date">
+<h2>6. Date<a class="headerlink" href="#date" title="Link to this heading"></a></h2>
+<p>Data Provenance:</p>
+<ul class="simple">
+<li><p>Stepstone jobs: Dates programmatically extracted from datePosted schema markup</p></li>
+<li><p>Indeed jobs: Null values are imputed with the current UTC timestamp via datetime.utcnow()</p></li>
+</ul>
+<p>Normalization Pipeline:</p>
+<ul class="simple">
+<li><p>Temporal metadata stripped to day granularity</p></li>
+<li><p>All values converted to ISO 8601-compliant date format (dd.mm.yyyy)</p></li>
+<li><p>Timezone and time-of-day metadata discarded</p></li>
+</ul>
+<p>Temporal validity is contingent upon daily scraping intervals.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.get_formatted_date" title="extraction.get_formatted_date"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the date extraction and cleaning</p></li>
+</ul>
+</section>
+<section id="location">
+<h2>7. Location<a class="headerlink" href="#location" title="Link to this heading"></a></h2>
+<p>Raw location strings from location or joblocationtext (stepstone or indeed) undergo heuristic normalization:</p>
+<ul class="simple">
+<li><p>Postal code removal via regex pattern matching (bd{5}b)</p></li>
+<li><p>Locale standardization (e.g., &quot;Garching bei München&quot; → &quot;Garching&quot;)</p></li>
+<li><p>Case folding and diacritic removal</p></li>
+</ul>
+<p>Prioritized search sequence from English offline <code class="docutils literal notranslate"><span class="pre">cities+states+countries.json</span></code>-database:</p>
+<ul class="simple">
+<li><p>Exact match in German administrative divisions without translation</p></li>
+<li><p>Extended search across global entries if no German matches and translates them back to German</p></li>
+<li><p>Usage of predefined state translations to avoid misspellings from English to German</p></li>
+</ul>
+<p><a class="reference internal" href="extraction.html#extraction.normalize_location_string" title="extraction.normalize_location_string"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction.normalize_location_string()</span></code></a>: Noise reduction and lexical validation
+<a class="reference internal" href="extraction.html#extraction.remove_leading_postal_code" title="extraction.remove_leading_postal_code"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction.remove_leading_postal_code()</span></code></a>: Postal code stripping
+<a class="reference internal" href="extraction.html#extraction.get_state_and_country" title="extraction.get_state_and_country"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction.get_state_and_country()</span></code></a>: Database query with fallback logic
+<a class="reference internal" href="extraction.html#extraction.validate_city" title="extraction.validate_city"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction.validate_city()</span></code></a>: German locale verification
+<a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction.extract_entities_from_json()</span></code></a>: Translation error correction</p>
+<p>The location is also directly given in the scraping data as location or joblocationtext.</p>
+<p>After extracting it, the location name gets cleaned for better processing and less noisy data. (e.g. Garching bei München -&gt; Garching)</p>
+<p>It then gets searched for in an offline json-database together with its state and country.
+Here the German search is preferred as long as there is a direct match in the German part of the document.
+When there is none the code searches the whole document for matches.</p>
+<p>A further point here is the translation of the names due to the English nature of the json-database.
+In this step, the original name without translation is searched first (using the method explained above).
+If there is no match the name gets translated into English and then searched for.
+This helps to mitigate translation mistakes, e.g. Hannover (GER) -&gt; Hanover (ENG) -&gt; Location: USA (originally Germany)</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.get_state_and_country" title="extraction.get_state_and_country"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to see the extraction from the json-database</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.normalize_location_string" title="extraction.normalize_location_string"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> and <a class="reference internal" href="extraction.html#extraction.remove_leading_postal_code" title="extraction.remove_leading_postal_code"><code class="xref py py-func docutils literal notranslate"><span class="pre">here</span></code></a> for the normalization of the location</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the handling/translation of the found locations</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.validate_city" title="extraction.validate_city"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> which checks if the found city has a German match</p></li>
+</ul>
+</section>
+<section id="state">
+<h2>8. State<a class="headerlink" href="#state" title="Link to this heading"></a></h2>
+<p>This is inferred from the json-database described in <a class="reference internal" href="#location"><span class="std std-ref">Locations</span></a>.</p>
+</section>
+<section id="country">
+<h2>9. Country<a class="headerlink" href="#country" title="Link to this heading"></a></h2>
+<p>For country assignment, Germany is set as the default when the location name matches an entry in the German section of the json-database.
+If no direct match is found, the country associated with the corresponding entry in the global database is used instead.</p>
+<p>For further details, see :ref:Locations&lt;7. Location&gt;.</p>
+</section>
+<section id="company">
+<h2>10. Company<a class="headerlink" href="#company" title="Link to this heading"></a></h2>
+<p>The Company is given in the scraping data as Company Name.
+It is taken directly from there and put into the SQLite-Database.</p>
+</section>
+<section id="company-size">
+<h2>11. Company Size<a class="headerlink" href="#company-size" title="Link to this heading"></a></h2>
+<p>The company size attribute is available exclusively for a subset of stepstone data, typically provided within the CompanyInfo list segment,
+most often as the final element. In the absence of this information, the pipeline defaults to outputting &quot;Keine Angaben.&quot;</p>
+<p>Reported company sizes are presented as variable ranges, which are subsequently mapped into standardized categorical groups for downstream
+dashboard integration and analysis.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_company_size" title="extraction.extract_company_size"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the company size extraction</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.categorize_company_size" title="extraction.categorize_company_size"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the categorization of the sizes</p></li>
+</ul>
+</section>
+<section id="time-model">
+<h2>12. Time Model<a class="headerlink" href="#time-model" title="Link to this heading"></a></h2>
+<p>The time model is identified through a combination of synonym recognition and fuzzy string-matching algorithms. The extraction pipeline targets
+specific segments of the JSON data, adapting its search strategy based on the data source: for stepstone, relevant signal words are located exclusively
+within the lists -&gt; company section, which consolidates all pertinent information; for indeed, the search is performed across the paragraphs section.
+This approach ensures robust detection of time model descriptors across heterogeneous data structures.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the synonym handling and Time Model Extraction</p></li>
+</ul>
+</section>
+<section id="position">
+<h2>13. Position<a class="headerlink" href="#position" title="Link to this heading"></a></h2>
+<p>This part works similar to the <a class="reference internal" href="#time-model"><span class="std std-ref">Time Model</span></a>.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the synonym handling and Position extraction</p></li>
+</ul>
+</section>
+<section id="employment-type">
+<h2>14. Employment Type<a class="headerlink" href="#employment-type" title="Link to this heading"></a></h2>
+<p>The Employment Type also works with the same synonym-logic as the <a class="reference internal" href="#time-model"><span class="std std-ref">Time Model</span></a> functionality.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="extraction.html#extraction.extract_entities_from_json" title="extraction.extract_entities_from_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the synonym handling and Employment-Type extraction</p></li>
+</ul>
+</section>
+<section id="experience-required">
+<h2>15. Experience Required<a class="headerlink" href="#experience-required" title="Link to this heading"></a></h2>
+<p>The required experience is extracted using a Llama model, which puts out either 0 or 1 using json formatting.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="model_selection.html#ii-experience-required"><span class="std std-ref">Click here</span></a> to learn more about the implementation of the LLM</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.process_jobs" title="extraction.process_jobs"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to see the implementation of the model</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.parse_json_response" title="extraction.parse_json_response"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to see how the json response is parsed</p></li>
+</ul>
+</section>
+<section id="category">
+<h2>16. Category<a class="headerlink" href="#category" title="Link to this heading"></a></h2>
+<p>The categories are also inferred by an LLM, which uses the same Llama base model as the <a class="reference internal" href="#experience-required"><span class="std std-ref">prior chapter</span></a>.</p>
+<p>It takes the <a class="reference internal" href="#job-title"><span class="std std-ref">Job Titles</span></a>, from the json-raw-data as input.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="performance_explained.html#branche"><span class="std std-ref">Click here</span></a> to learn more about the implementation of the LLM</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.process_jobs" title="extraction.process_jobs"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> to see the handling of the model</p></li>
+</ul>
+</section>
+<section id="incentives-and-benfeits">
+<h2>17. Incentives and Benfeits<a class="headerlink" href="#incentives-and-benfeits" title="Link to this heading"></a></h2>
+<p>Incentives and benefits are extracted and classified using a two-stage model pipeline.</p>
+<p>The LLaMA-3.2-3B-Instruct model first identifies relevant incentive terms, processing structured content/benefits data for stepstone and
+unstructured paragraphs for indeed. For indeed, explicitly listed incentives from the benefits part are also included and combined with
+LLM-extracted terms to ensure comprehensive coverage.</p>
+<p>These results are then classified into predefined categories using a Sentence-Transformer model based on semantic similarity. This approach maximizes recall,
+reduces noise by separating extraction from classification, and ensures output consistency through json schema validation.
+The methodology is both resource-efficient and robust across different portal data structures.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="model_selection.html#iii-incentives-extraction"><span class="std std-ref">Click here</span></a> to learn more about the implementation of the LLM</p></li>
+<li><p><a class="reference internal" href="model_selection.html#sentence-transformer"><span class="std std-ref">Click here</span></a> to learn more about the implementation of the Sentence-Transformer</p></li>
+<li><p><a class="reference internal" href="extraction.html#extraction.process_jobs" title="extraction.process_jobs"><code class="xref py py-func docutils literal notranslate"><span class="pre">Click</span> <span class="pre">here</span></code></a> for the handling of the model</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-left" title="Instructions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="main.html" class="btn btn-neutral float-right" title="Main Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Tom Ziegler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

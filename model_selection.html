@@ -1,0 +1,227 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="english" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Selection and Implementation &mdash; Using NLP for Job Data Structuring 23.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46b02b20"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Performance Module" href="performance.html" />
+    <link rel="prev" title="Extraction Module" href="extraction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Using NLP for Job Data Structuring
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_sources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongo_db.html">MongoDB Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sqlite.html">SQlite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Selection and Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sentence-transformer">1. Sentence-Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sentence-transformer-implementation-details">Sentence-Transformer implementation details:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#llama-model">2. Llama-Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#llama-implementation-details">Llama implementation details:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-general-setup-for-all-llama-use-cases">I. General setup for all Llama-Use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-experience-required">II. Experience-Required</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iii-incentives-extraction">III. Incentives Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iv-branche">IV. Branche</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance_explained.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_db.html">Read DB Module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Using NLP for Job Data Structuring</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Model Selection and Implementation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/model_selection.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-selection-and-implementation">
+<h1>Model Selection and Implementation<a class="headerlink" href="#model-selection-and-implementation" title="Link to this heading"></a></h1>
+<p>This section explains why I select specific models and how I implement them.</p>
+<section id="sentence-transformer">
+<h2>1. Sentence-Transformer<a class="headerlink" href="#sentence-transformer" title="Link to this heading"></a></h2>
+<p>For the classification I use <code class="docutils literal notranslate"><span class="pre">sentence-transformers/distiluse-base-multilingual-cased-v1</span></code>.</p>
+<p>This model has several advantages compared to the Llama-Model:</p>
+<ul class="simple">
+<li><p>Speed and efficiency: The sentence-transformer is significantly faster and requires less computational resources than Llama models (good for our resource-constrained environment)</p></li>
+<li><p>Lower memory requirements: Distiluse has much lower memory needs, making it more practical for production environments</p></li>
+<li><p>Cost-effectiveness: The model is more affordable to run</p></li>
+<li><p>Specialized for classification: The architecture with the [CLS] token makes it naturally suited for classification tasks</p></li>
+<li><p>Multilingualism: The Sentence-Transfomrer can understand 14 different languages</p></li>
+</ul>
+<p>-&gt; It's lightweight, faster, and specifically designed for tasks that don't require text generation</p>
+</section>
+<section id="sentence-transformer-implementation-details">
+<h2>Sentence-Transformer implementation details:<a class="headerlink" href="#sentence-transformer-implementation-details" title="Link to this heading"></a></h2>
+<p>The classification pipeline employs an empirically optimized 80:20 ratio of few-shot examples to contextual data, yielding a statistically significant recall improvement
+of ~ Δ=0.15 compared to baseline configurations.</p>
+<p>A global decision threshold (θ=0.45) is uniformly applied across categories to prevent dataset-specific overfitting while
+preserving model generalizability. Batch processing is constrained to size=4 to mitigate out-of-memory (OOM) exceptions during variable-length sequence processing.</p>
+<p>A diagnostic logging pipeline records incentive vectors and top-5 benefit-ranked incentive groups, enabling empirical calibration of the global threshold to optimize
+precision-recall trade-offs. Resource constraints are addressed through post-inference memory deallocation (CUDA cleanup) and CPU offloading protocols.</p>
+<p>Further implementation details can be found <a class="reference internal" href="extraction.html#extraction.classify_incentives_with_few_shot" title="extraction.classify_incentives_with_few_shot"><code class="xref py py-func docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+</section>
+<section id="llama-model">
+<h2>2. Llama-Model<a class="headerlink" href="#llama-model" title="Link to this heading"></a></h2>
+<p>For the pure extraction tasks I use <code class="docutils literal notranslate"><span class="pre">meta-llama/Llama-3.2-3B-Instruct</span></code>.</p>
+<p>This model has several advantages compared to other LLMs with similar sizes:</p>
+<ul class="simple">
+<li><p>Specialized retrieval capabilities - Optimized for extracting and summarizing specific information</p></li>
+<li><p>Strong reasoning abilities (78.6 on ARC Challenge) - Better understanding of complex incentive structures</p></li>
+<li><p>Multilingual support for 8 languages - Process incentives across different language markets</p></li>
+<li><p>Lightweight efficiency - Faster processing than larger models with comparable performance (Google, GPT, ...)</p></li>
+<li><p>Instruct-Models are trained to follow instructions precisely which limits hallucination</p></li>
+</ul>
+</section>
+<section id="llama-implementation-details">
+<h2>Llama implementation details:<a class="headerlink" href="#llama-implementation-details" title="Link to this heading"></a></h2>
+</section>
+<section id="i-general-setup-for-all-llama-use-cases">
+<h2>I. General setup for all Llama-Use cases<a class="headerlink" href="#i-general-setup-for-all-llama-use-cases" title="Link to this heading"></a></h2>
+<p>To optimize resource utilization in environments with limited GPU memory (e.g., 8 GB VRAM), several strategies are employed
+during LLM-inference. The parameter <code class="docutils literal notranslate"><span class="pre">return_full_text=false</span></code> is consistently set to prevent
+repetition of the input prompt in the output, thereby reducing unnecessary token consumption.</p>
+<p>The model is instantiated using mixed precision (float16), which further conserves VRAM without compromising inference quality.
+Post-inference, explicit CUDA memory management routines are invoked to release GPU resources, and the model is dynamically
+loaded and unloaded as needed. These measures collectively enable efficient operation of LLMs in resource-constrained settings.</p>
+<p>Prompt engineering follows a standardized structure to maximize model performance and output consistency:</p>
+<ol class="arabic simple">
+<li><p>A concise description of the overarching task (e.g., identification, classification) and the nature of the input data.</p></li>
+<li><p>A set of clearly enumerated instructions or rules to guide the model’s response.</p></li>
+<li><p>A predefined json schema specifying the expected output format.</p></li>
+<li><p>A concluding directive reinforcing strict adherence to the prescribed json structure.</p></li>
+</ol>
+<p>This systematic approach ensures both computational efficiency and the reliability of model outputs in constrained computational environments.</p>
+</section>
+<section id="ii-experience-required">
+<h2>II. Experience-Required<a class="headerlink" href="#ii-experience-required" title="Link to this heading"></a></h2>
+<p>The following hyperparameters are systematically calibrated to balance output quality and computational efficiency in constrained-resource environments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_new_tokens=15</span></code>: Constrains output length to enforce conciseness, reducing hallucination risks and mitigating noise from extraneous token generation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">temperature=0.1</span></code>: Optimizes deterministic output by minimizing stochastic sampling (lower bound: 0.01 to avoid gradient collapse).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repetition_penalty=1.2</span></code>: Amplified relative to baseline configurations to suppress lexical redundancy in short-sequence outputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">do_sample=True</span></code>: Enables probabilistic sampling for improved solution-space exploration, with trade-offs in deterministic reproducibility requiring rigorous output validation.</p></li>
+</ul>
+<p>The model's response in json-format is handled in <a class="reference internal" href="extraction.html#extraction.parse_json_response" title="extraction.parse_json_response"><code class="xref py py-func docutils literal notranslate"><span class="pre">this</span></code></a> function.</p>
+<p>Json-formatted responses are programmatically validated via a <code class="xref py py-func docutils literal notranslate"><span class="pre">&lt;parsing-function&gt;extraction.parse_json_response()</span></code>, ensuring syntactic and semantic adherence to predefined schemas.</p>
+</section>
+<section id="iii-incentives-extraction">
+<h2>III. Incentives Extraction<a class="headerlink" href="#iii-incentives-extraction" title="Link to this heading"></a></h2>
+<p>The inference pipeline employs the following empirically derived hyperparameters to maximize throughput while maintaining output integrity under VRAM constraints:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_new_tokens=350</span></code>: Empirically determined upper bound for token generation given VRAM capacity. Truncation artifacts in json outputs are mitigated via post-processing with a dedicated :func:json-repair&lt;extraction.parse_json_incentives&gt; utility.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repetition_penalty=1.1</span></code>: Supplement to structural prompt rules (Rule 4) to address edge cases of redundant incentive enumeration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">do_sample=False</span></code>: Enables deterministic greedy decoding, ensuring reproducible performance metrics during validation phases.</p></li>
+</ul>
+<p>Json-formatted incentive lists undergo schema validation and lexical sanitization through <code class="xref py py-func docutils literal notranslate"><span class="pre">&lt;this&gt;extraction.parse_json_incentives()</span></code> function.</p>
+<p>The model generally shows good performance values for incentive extraction. It can be improved by using a larger Llama-model or
+finetuning it on some data. See the <a class="reference internal" href="performance_explained.html#id1"><span class="std std-ref">performance section</span></a> to see the individual accuiracy and recall per category.</p>
+<p>Training of the Llama Model is not possible to conduct for me due to my restricted <a class="reference internal" href="performance_explained.html#used-hardware-software"><span class="std std-ref">GPU</span></a>.
+Training a Llama-3.2-3B-Instruct model with 8 GB VRAM is infeasible due to hardware limitations:
+Even quantized 3B models require &gt;12 GB VRAM for training gradients and optimizer states, while inference alone consumes ~6 GB.</p>
+</section>
+<section id="iv-branche">
+<h2>IV. Branche<a class="headerlink" href="#iv-branche" title="Link to this heading"></a></h2>
+<p>The following hyperparameters are optimized for categorical classification tasks under VRAM constraints:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_new_tokens=20</span></code>: Enforces output brevity to reduce hallucination risks and token-space noise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">temperature=0.1</span></code>: Balances deterministic output with minimal stochasticity; lower thresholds (e.g., 0.01) induce gradient collapse (see :ref:Experience-Required&lt;II. Experience-Required&gt;).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repetition_penalty=1.1</span></code>: Suppresses lexical redundancy in compact categorical outputs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">do_sample=True</span></code>: Probabilistic sampling increases recall for rare categories.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">top_p=0.95</span></code>: Nucleus sampling complements stochastic exploration while maintaining output coherence.</p></li>
+</ul>
+<p>Empirical results in the :ref:Performance-Section&lt;Performance Metrics&gt; demonstrate:</p>
+<ol class="arabic simple">
+<li><p>High Precision: Robust alignment with ground-truth categories across diverse job titles.</p></li>
+<li><p>Edge Case Limitations: Semantic ambiguity in underspecified queries (e.g., atypical job titles) occasionally induces misclassification.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="extraction.html" class="btn btn-neutral float-left" title="Extraction Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="performance.html" class="btn btn-neutral float-right" title="Performance Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Tom Ziegler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

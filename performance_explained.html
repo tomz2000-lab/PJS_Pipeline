@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="english" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performance Metrics &mdash; Using NLP for Job Data Structuring 23.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46b02b20"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Read DB Module" href="read_db.html" />
+    <link rel="prev" title="Performance Module" href="performance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Using NLP for Job Data Structuring
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_sources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongo_db.html">MongoDB Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sqlite.html">SQlite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_selection.html">Model Selection and Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Performance Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#job-analysis-export-csv">Job Analysis Export CSV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#job-analysis-sqlite-database">Job Analysis SQLite-Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accuracy">1. Accuracy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recall">2. Recall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#branche">3. Branche</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#used-hardware-software">Used Hardware/Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="read_db.html">Read DB Module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Using NLP for Job Data Structuring</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Performance Metrics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/performance_explained.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="performance-metrics">
+<h1>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Link to this heading"></a></h1>
+<p>This section documents the key data files used in the job analysis pipeline and the performance metrics obtained from our analysis.</p>
+<section id="job-analysis-export-csv">
+<h2>Job Analysis Export CSV<a class="headerlink" href="#job-analysis-export-csv" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">job_analysis_export.csv</span></code> file contains the processed job listings with extracted incentives and classifications.
+This file is generated by running the pipeline and serves as the primary output for analysis.</p>
+<p>Key columns include:
+- Job metadata (title, URL, portal name, date)
+- Location information (city, state, country)
+- Company details (name, size)
+- Employment attributes (job type, time model, position level)
+- Binary indicators for 20+ incentive categories</p>
+</section>
+<section id="job-analysis-sqlite-database">
+<h2>Job Analysis SQLite-Database<a class="headerlink" href="#job-analysis-sqlite-database" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">job_analysis_shorter.db</span></code> file is an SQLite-Database that stores all processed job listings.
+It maintains the same schema as the CSV export but allows for more efficient querying and analysis.</p>
+<p>The database uses a composite unique constraint on (Job_URL, Stadt, Zeitmodell, Position) to prevent
+duplicate entries while allowing the same job to appear with different location/work model combinations.
+Click <a class="reference internal" href="sqlite.html#module-sqlite"><span class="std std-ref">here</span></a> to read more details about the SQlite-Database.</p>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading"></a></h2>
+<p>The performance_history.csv file documents accuracy and recall metrics across five independent evaluation runs.
+Results are reported separately for incentives and non-incentives, with each section providing both combined and
+category-specific accuracy and recall. Additionally, overall accuracy and recall are aggregated across all categories
+to provide a comprehensive performance overview.</p>
+</section>
+<section id="accuracy">
+<h2>1. Accuracy<a class="headerlink" href="#accuracy" title="Link to this heading"></a></h2>
+<p>The average accuracy of all categories
+over five runs is 0.8286.</p>
+<p>Find the individual values below.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="_images/accuracy.png"><img alt="Alternative text" src="_images/accuracy.png" style="width: 400px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Accuracy per category and average accuracy</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="recall">
+<h2>2. Recall<a class="headerlink" href="#recall" title="Link to this heading"></a></h2>
+<p>The average recall of all categories
+the five runs is 0.9076.</p>
+<p>Find the individual values below.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="_images/recall.png"><img alt="Alternative text" src="_images/recall.png" style="width: 400px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Recall per category and average recall</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The processing of one job took ~35s (depending on the length of the content)</p>
+<p>Quantitative benchmarks reveal consistent metrics across most categories, with statistically significant deviations
+observed in flexible Arbeitszeiten, Weiterbildung, and Arbeitsausstattung. These outliers exhibit lower recall
+and accuracy due to persistent lexical hallucination tendencies in the LLM’s output space. Targeted prompt engineering
+interventions (see <a class="reference internal" href="model_selection.html#iii-incentives-extraction"><span class="std std-ref">here</span></a>) partially mitigated errors but failed
+to resolve systemic semantic drift.</p>
+<p>Architectural limitations-specifically, hardware-induced model scaling constraints-preclude deploying larger LLMs that
+could address this via expanded context windows. Performance remains Pareto-optimal given current VRAM ceilings.</p>
+<p>For more information on that look <a class="reference internal" href="model_selection.html#iii-incentives-extraction"><span class="std std-ref">here</span></a>.</p>
+</section>
+<section id="branche">
+<h2>3. Branche<a class="headerlink" href="#branche" title="Link to this heading"></a></h2>
+<p>The branche_test.py evaluation addresses limitations in the original IT-only test data by introducing a structured benchmark
+with 4 jobs per category (2 English, 2 German) from branche_test.csv. I use <code class="docutils literal notranslate"><span class="pre">branche_test.py</span></code> for testing, which isolates
+the Llama-3.2-3B-Instruct model's branch classification capability using the same prompt
+engineering and inference parameters as <a class="reference internal" href="extraction.html#module-extraction"><span class="std std-ref">extraction.py</span></a>.</p>
+<p>The metrics for the branche:</p>
+<ul class="simple">
+<li><p>Accuracy: 1.00</p></li>
+<li><p>Recall: 1.00</p></li>
+</ul>
+</section>
+<section id="used-hardware-software">
+<h2>Used Hardware/Software<a class="headerlink" href="#used-hardware-software" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>GPU: NVIDIA GeForce GTX 1070 with 8GB VRAM</p></li>
+<li><p>CPU: Intel(R) Core(TM) i7-6700K CPU &#64; 4.00GHz</p></li>
+<li><p>RAM: 16 GB</p></li>
+<li><p>System: Debian GNU/Linux 12</p></li>
+<li><p>Python-Version: 3.11</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="performance.html" class="btn btn-neutral float-left" title="Performance Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="read_db.html" class="btn btn-neutral float-right" title="Read DB Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Tom Ziegler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

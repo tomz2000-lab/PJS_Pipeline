@@ -1,0 +1,710 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="english" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extraction Module &mdash; Using NLP for Job Data Structuring 23.05.2025 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=46b02b20"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Selection and Implementation" href="model_selection.html" />
+    <link rel="prev" title="SQlite Module" href="sqlite.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Using NLP for Job Data Structuring
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_sources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mongo_db.html">MongoDB Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sqlite.html">SQlite Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extraction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.categorize_company_size"><code class="docutils literal notranslate"><span class="pre">categorize_company_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.classify_incentives_with_few_shot"><code class="docutils literal notranslate"><span class="pre">classify_incentives_with_few_shot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.clean_incentives"><code class="docutils literal notranslate"><span class="pre">clean_incentives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.detect_homeoffice"><code class="docutils literal notranslate"><span class="pre">detect_homeoffice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.extract_company_size"><code class="docutils literal notranslate"><span class="pre">extract_company_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.extract_entities_from_json"><code class="docutils literal notranslate"><span class="pre">extract_entities_from_json()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.extract_website_name"><code class="docutils literal notranslate"><span class="pre">extract_website_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.get_benefits_text"><code class="docutils literal notranslate"><span class="pre">get_benefits_text()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.get_direct_benefits"><code class="docutils literal notranslate"><span class="pre">get_direct_benefits()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.get_formatted_date"><code class="docutils literal notranslate"><span class="pre">get_formatted_date()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.get_state_and_country"><code class="docutils literal notranslate"><span class="pre">get_state_and_country()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.normalize_location_string"><code class="docutils literal notranslate"><span class="pre">normalize_location_string()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.parse_json_incentives"><code class="docutils literal notranslate"><span class="pre">parse_json_incentives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.parse_json_response"><code class="docutils literal notranslate"><span class="pre">parse_json_response()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.process_jobs"><code class="docutils literal notranslate"><span class="pre">process_jobs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.remove_leading_postal_code"><code class="docutils literal notranslate"><span class="pre">remove_leading_postal_code()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.sanitize_json_response"><code class="docutils literal notranslate"><span class="pre">sanitize_json_response()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.split_locations"><code class="docutils literal notranslate"><span class="pre">split_locations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.translate_text"><code class="docutils literal notranslate"><span class="pre">translate_text()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extraction.validate_city"><code class="docutils literal notranslate"><span class="pre">validate_city()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_selection.html">Model Selection and Implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance_explained.html">Performance Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_db.html">Read DB Module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Using NLP for Job Data Structuring</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Extraction Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/extraction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-extraction">
+<span id="extraction-module"></span><h1>Extraction Module<a class="headerlink" href="#module-extraction" title="Link to this heading"></a></h1>
+<p>Job Analysis Pipeline for Extracting and Categorizing Incentives</p>
+<p>This module implements a comprehensive data processing pipeline that extracts, analyzes,
+and categorizes job incentives and their descriptions from online job listings. It connects to Mongo-DB to retrieve
+job data, processes text using Llama 3.2 for information extraction, classifies incentives
+using Sentence-Transformers, and stores results in a SQLite-DB.</p>
+<p>Key components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Mongo-DB data extraction with bson handling</p></li>
+<li><p>Location normalization and geocoding with offline database</p></li>
+<li><p>Synonym handling and regex-extraction for non-benefits related data</p></li>
+<li><p>Incentive extraction, industry category detection, and experience knowledge extraction using LLMs</p></li>
+<li><p>Incentive Classification using Sentence-Transformer with few-shot learning and context information</p></li>
+<li><p>Memory-efficient batch processing and model offloading/cleaning</p></li>
+</ul>
+</div></blockquote>
+<p>The pipeline is designed to handle different job portal formats (stepstone, indeed) and
+implements robust error handling and fallback mechanisms throughout the extraction process.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.categorize_company_size">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">categorize_company_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#categorize_company_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.categorize_company_size" title="Link to this definition"></a></dt>
+<dd><p>Categorize company size into eight predefined categories based on employee count.</p>
+<p>This function extracts numeric values from a company size string and maps them
+to standardized size categories. It handles various input formats by extracting
+all numbers and using the largest one as the size indicator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size_str</strong> (<em>str</em>) -- String containing company size information</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Categorized company size as a string label</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>The function uses the following size categories:</p>
+<ul class="simple">
+<li><p>'0-10': Very small companies/startups</p></li>
+<li><p>'11-50': Small companies</p></li>
+<li><p>'51-250': Medium-sized companies</p></li>
+<li><p>'251-500': Mid-large companies</p></li>
+<li><p>'501-1000': Large companies</p></li>
+<li><p>'1001-2500': Very large companies</p></li>
+<li><p>'2501-10000': Enterprise-level companies</p></li>
+<li><p>'10000+': Major corporations</p></li>
+</ul>
+<p>If no numbers are found in the input string, 'Keine Angaben' (No information) is returned.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.classify_incentives_with_few_shot">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">classify_incentives_with_few_shot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incentives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.45</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#classify_incentives_with_few_shot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.classify_incentives_with_few_shot" title="Link to this definition"></a></dt>
+<dd><p>Classify incentives using a few-shot learning approach with context implementation.</p>
+<p>This function uses a Sentence-Transformer model to compare job incentives against
+predefined examples for each category. It combines direct similarity matching with
+contextual understanding to achieve more accurate classification. (80/20 ratio)</p>
+<p>It further creates a logging-file that shows the found incentives with their
+regarding values and assignments. This can be used to adapt the global threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incentives</strong> (<em>list</em>) -- List of incentive strings to classify</p></li>
+<li><p><strong>device</strong> (<em>str</em>) -- Computation device ('cuda' or 'cpu')</p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) -- Minimum similarity score to assign a category, defaults to 0.45</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing classification results and unmatched incentives</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple(dict, list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.clean_incentives">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">clean_incentives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#clean_incentives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.clean_incentives" title="Link to this definition"></a></dt>
+<dd><p>Extract bulleted list items from the model response when json parsing fails.</p>
+<p>This function serves as a fallback extraction method for when structured json
+parsing fails. It identifies and extracts items from bulleted or numbered lists
+in the model's text response by looking for common list markers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>str</em>) -- Text response from the language model that may contain bulleted items</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of extracted incentives/benefits from bulleted items</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p>The function identifies list items by matching lines that start with:</p>
+<ul class="simple">
+<li><p>Hyphens (-)</p></li>
+<li><p>Asterisks (*)</p></li>
+<li><p>Bullet points (•)</p></li>
+<li><p>Numbered items (1., 2., etc.)</p></li>
+</ul>
+<p>It then cleans these items by removing the leading markers and whitespace.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.detect_homeoffice">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">detect_homeoffice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#detect_homeoffice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.detect_homeoffice" title="Link to this definition"></a></dt>
+<dd><p>Detect mentions of remote work options in job listings.</p>
+<p>This function uses a multi-stage approach to identify homeoffice/remote work
+options in job listings.</p>
+<ol class="arabic simple">
+<li><p>Check company info section (most reliable location for this information)</p></li>
+<li><p>Fall back to full-text search using synonyms across all job description sections</p></li>
+<li><p>Return 1 if any homeoffice pattern is found by synonym-matching, 0 otherwise</p></li>
+<li><p>If no homeoffice is found the code overwrites the 0 with a 1 if the LLM later finds homeoffice in the text</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job_data</strong> (<em>dict</em>) -- Job listing data dictionary</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Binary indicator (1 if homeoffice is mentioned, 0 if not)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p>The detection follows these steps in order:</p>
+<p>This direct pattern matching approach is more efficient than directly/always using LLM-based
+extraction for this specific attribute.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.extract_company_size">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">extract_company_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#extract_company_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.extract_company_size" title="Link to this definition"></a></dt>
+<dd><p>Extract company size information from stepstone job listings.</p>
+<p>This function searches through the 'CompanyInfo' field in stepstone job listings
+to find company size information.
+The information is stored in the last element of the list-elements.</p>
+<p>Note that this function only works with stepstone's data structure, as indeed job
+listings don't provide company size information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job</strong> (<em>dict</em>) -- Job listing data dictionary from Stepstone</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Company size string or default value if not found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>The function follows these steps:</p>
+<ol class="arabic simple">
+<li><p>Check if 'CompanyInfo' exists in the job data</p></li>
+<li><p>Iterate through each list in 'CompanyInfo'</p></li>
+<li><p>Look for &quot;Unternehmensgröße&quot; label and return the next item</p></li>
+<li><p>If not found, try to use the last element as fallback</p></li>
+<li><p>Return default value if no company size information is found</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.extract_entities_from_json">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">extract_entities_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#extract_entities_from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.extract_entities_from_json" title="Link to this definition"></a></dt>
+<dd><p>Extract location, company, and employment details from job listing json.</p>
+<p>This function processes job data to extract and normalize key entities including location,
+company information, job type, working model, and position level. It handles different
+data formats from various job portals (stepstone, indeed) and normalizes the extracted
+information into a consistent structure.</p>
+<p>The function performs several key operations:</p>
+<ol class="arabic simple">
+<li><p>Extracts basic job metadata (title, URL, portal)</p></li>
+<li><p>Identifies company information from different data structures</p></li>
+<li><p>Processes location data with geocoding and translation</p></li>
+<li><p>Analyzes job descriptions to determine employment type and work model</p></li>
+<li><p>Categorizes company size and position level</p></li>
+</ol>
+<p>Time model, position level, and employment type are extracted using word-matching
+against predefined synonym dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job</strong> (<em>dict</em>) -- Job listing data in JSON format</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing extracted and normalized job entities</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IndexError</strong> -- When accessing company_info elements that don't exist</p></li>
+<li><p><strong>KeyError</strong> -- When accessing non-existent dictionary keys</p></li>
+<li><p><strong>Exception</strong> -- For general errors during location processing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.extract_website_name">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">extract_website_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#extract_website_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.extract_website_name" title="Link to this definition"></a></dt>
+<dd><p>Extract the website name from the provided URL using regex pattern matching.</p>
+<p>This function attempts to extract the domain name from a URL by applying two different
+regex patterns. It first tries to match URLs with 'www' prefix, then falls back to
+matching standard HTTP/HTTPS URLs without 'www'.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) -- The URL from which to extract the website name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted website name or 'Unknown' if no pattern matches</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_website_name</span><span class="p">(</span><span class="s2">&quot;https://www.example.com/jobs&quot;</span><span class="p">)</span>
+<span class="go">&#39;example&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extract_website_name</span><span class="p">(</span><span class="s2">&quot;https://subdomain.indeed.com/job/123&quot;</span><span class="p">)</span>
+<span class="go">&#39;indeed&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.get_benefits_text">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">get_benefits_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#get_benefits_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.get_benefits_text" title="Link to this definition"></a></dt>
+<dd><p>Extract benefits text from job data for LLM processing.</p>
+<p>This function extracts benefits-related text from job listings in different formats depending on the job protal, the data is from.</p>
+<p>The function handles two main data structures:</p>
+<ol class="arabic simple">
+<li><p>Stepstone format with 'lists' containing 'content/benefits'</p></li>
+<li><p>Indeed format with 'paragraphs' as either list or dictionary</p></li>
+</ol>
+<p>If no benefits text is found in either structure, an empty string is returned.</p>
+<p>This text passages are later used for the <a class="reference internal" href="#extraction.process_jobs" title="extraction.process_jobs"><code class="xref py py-func docutils literal notranslate"><span class="pre">incentive</span> <span class="pre">extraction</span></code></a> as input for the corresponding prompt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job</strong> (<em>dict</em>) -- Job listing data containing benefits information</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Concatenated string of benefits text, separated by newlines</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.get_direct_benefits">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">get_direct_benefits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#get_direct_benefits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.get_direct_benefits" title="Link to this definition"></a></dt>
+<dd><p>Extract benefits directly from the 'benefits' array for indeed jobs.
+Adds them to the <a class="reference internal" href="#extraction.process_jobs" title="extraction.process_jobs"><code class="xref py py-func docutils literal notranslate"><span class="pre">classification</span></code></a>-function together with the incentives found by the LLM.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.get_formatted_date">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">get_formatted_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#get_formatted_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.get_formatted_date" title="Link to this definition"></a></dt>
+<dd><p>Extract and format the job posting date in dd.mm.yyyy format.</p>
+<p>This function retrieves the posting date from datePosted in the stepstone-data and converts it to a
+standardized German date format. It handles ISO 8601 formatted dates and
+provides a fallback to the current date when no valid date is found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job</strong> (<em>dict</em>) -- Dictionary containing job listing data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Formatted date string in DD.MM.YYYY format</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>The function follows these steps:</p>
+<ol class="arabic simple">
+<li><p>Attempt to extract the 'datePosted' field from the stepstone-jobs</p></li>
+<li><p>If present, try to parse it as an ISO 8601 date string</p></li>
+<li><p>Handle timezone information by normalizing 'Z' notation</p></li>
+<li><p>If parsing fails or no date is provided, use the current date as fallback</p></li>
+</ol>
+<p>This approach ensures consistent date formatting across different job board
+sources.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.get_state_and_country">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">get_state_and_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">city_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#get_state_and_country"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.get_state_and_country" title="Link to this definition"></a></dt>
+<dd><p>Fetch state and country for a given city using offline json database.</p>
+<p>This function searches through a hierarchical database of countries, states, and cities
+to find location information for a given city name. It performs a case-insensitive match
+and handles translation of state and country names to German.
+It first tries to find the name in the German part of the json, then switches over to a full-json search,
+if the name was not found in the German part.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>city_name</strong> (<em>str</em>) -- Name of the city to search for in the database</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing state and country names in German</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p>The function follows these steps:</p>
+<ol class="arabic simple">
+<li><p>Searches for an exact match of the city name in the database, prioritizing German cities</p></li>
+<li><p>If found, checks if the state name exists in BUNDESLAENDER_MAPPING</p></li>
+<li><p>If not in mapping, translates state name from English to German</p></li>
+<li><p>Translates country name from English to German if no direct German match</p></li>
+<li><p>Returns both in a dictionary with &quot;state&quot; and &quot;country&quot; keys</p></li>
+<li><p>Returns {&quot;state&quot;: &quot;Unknown&quot;, &quot;country&quot;: &quot;Unknown&quot;} if city not found</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.normalize_location_string">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">normalize_location_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#normalize_location_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.normalize_location_string" title="Link to this definition"></a></dt>
+<dd><p>Clean and standardize location strings for consistent processing.</p>
+<p>This function normalizes location strings by converting various separators to commas,
+removing annotations, parenthetical content, and standardizing spacing. It helps
+prepare location data for further processing and geocoding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location_str</strong> (<em>str</em>) -- Raw location string that may contain multiple locations</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cleaned and standardized location string with consistent separators</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>The function performs the following transformations:</p>
+<ol class="arabic simple">
+<li><p>Converts separators (semicolons, slashes, bullets) and conjunctions to commas</p></li>
+<li><p>Removes qualifying phrases like &quot;bei Stuttgart&quot;</p></li>
+<li><p>Removes parentheses and their content</p></li>
+<li><p>Standardizes spacing around commas</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.parse_json_incentives">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">parse_json_incentives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#parse_json_incentives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.parse_json_incentives" title="Link to this definition"></a></dt>
+<dd><p>Parse model response to extract incentives as a json array.</p>
+<p>This function extracts benefits/incentives from language model responses using
+multiple fallback strategies. It handles various response formats and potential
+parsing errors with a robust multi-step approach.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>str</em>) -- Text response from the language model containing benefits data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unique incentives/benefits extracted from the response</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p>The function implements the following extraction strategies in order:</p>
+<ol class="arabic simple">
+<li><p>Sanitizes and repairs the entire response as json</p></li>
+<li><p>Attempts to find and repair json objects within the response</p></li>
+<li><p>Extracts the benefits array directly using regex patterns</p></li>
+<li><p>Falls back to extracting bulleted items as a last resort</p></li>
+</ol>
+<p>All exceptions are handled internally, ensuring the function always returns
+a list without raising exceptions to the caller.</p>
+<dl class="field-list">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_json_incentives</span><span class="p">(</span><span class="s1">&#39;{&quot;benefits&quot;: [&quot;Flexible hours&quot;, &quot;Health insurance&quot;]}&#39;</span><span class="p">)</span>
+<span class="go">[&#39;Flexible hours&#39;, &#39;Health insurance&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.parse_json_response">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">parse_json_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#parse_json_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.parse_json_response" title="Link to this definition"></a></dt>
+<dd><p>Extract and parse the first json object from the LLMs respond wheather expericne is required
+for the job or not.</p>
+<p>This function searches for the first json object in a text string and attempts
+to parse it. It's particularly useful for extracting structured data from
+LLM responses that might contain additional text before or after the json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>str</em>) -- Text string that may contain a json object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed json object as a dictionary, or empty dictionary if no valid json found</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.process_jobs">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">process_jobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">insert_or_replace_job</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#process_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.process_jobs" title="Link to this definition"></a></dt>
+<dd><p>Process job listings from Mongo-DB and store in SQLite-Database.</p>
+<p>This function implements a complete pipeline for processing job listings data:</p>
+<ol class="arabic simple">
+<li><p>Extracts required experience, branche based on job title and raw-incentives/benefits using LLama</p></li>
+<li><p>Classifies raw-incentives/benefits using Sentence-Transformers</p></li>
+<li><p>Stores the processed data in a SQLite-Database</p></li>
+</ol>
+<p>For key design choices see <a class="reference internal" href="model_selection.html#model-selection-and-implementation"><span class="std std-ref">here</span></a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>insert_or_replace_job</strong> (<em>callable</em>) -- Function to insert or update job records in the database</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) -- Number of jobs to process in each batch, defaults to 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ConnectionError</strong> -- If connection to Mongo-DB fails</p></li>
+<li><p><strong>RuntimeError</strong> -- If model loading fails</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.remove_leading_postal_code">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">remove_leading_postal_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#remove_leading_postal_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.remove_leading_postal_code" title="Link to this definition"></a></dt>
+<dd><p>Remove leading postal codes from location strings.</p>
+<p>This function strips any numeric postal codes that appear at the beginning of
+location strings, allowing for cleaner location data processing. It matches
+one or more digits at the start of the string followed by optional whitespace.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<em>str</em>) -- Location string that may contain a leading postal code</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Location string with any leading postal code removed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">remove_leading_postal_code</span><span class="p">(</span><span class="s2">&quot;12345 Berlin&quot;</span><span class="p">)</span>
+<span class="go">&#39;Berlin&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remove_leading_postal_code</span><span class="p">(</span><span class="s2">&quot;Berlin&quot;</span><span class="p">)</span>
+<span class="go">&#39;Berlin&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.sanitize_json_response">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">sanitize_json_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#sanitize_json_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.sanitize_json_response" title="Link to this definition"></a></dt>
+<dd><p>Sanitize invalid escape sequences in json responses from language models.</p>
+<p>This function removes invalid escape sequences that may appear in json responses
+generated by large language models. It specifically targets hexadecimal escape
+sequences that are not valid in standard json and could cause
+parsing errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>str</em>) -- Text response from a language model that may contain invalid json</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sanitized response with invalid escape sequences removed</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p>The function is particularly useful when processing outputs from LLMs that may
+hallucinate or generate malformed json with escape sequences that aren't properly
+encoded according to the json specification.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.split_locations">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">split_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#split_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.split_locations" title="Link to this definition"></a></dt>
+<dd><p>Split a normalized location string into individual location components.</p>
+<p>This function intelligently splits location strings on commas while handling
+complex cases such as parenthetical content. It preserves commas that appear
+within parentheses to maintain the integrity of location names that naturally
+contain commas.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>normalized_str</strong> (<em>str</em>) -- Normalized location string with comma separators</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of individual location strings</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Example<span class="colon">:</span></dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">split_locations</span><span class="p">(</span><span class="s2">&quot;Berlin, Frankfurt (Main), München&quot;</span><span class="p">)</span>
+<span class="go">[&#39;Berlin&#39;, &#39;Frankfurt (Main)&#39;, &#39;München&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.translate_text">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">translate_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'de'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#translate_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.translate_text" title="Link to this definition"></a></dt>
+<dd><p>Translate text between languages using Google Translator.</p>
+<p>This function provides text translation capabilities used for location data
+processing. It handles translation errors gracefully by returning the original text
+when translation fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) -- The text string to be translated</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) -- Source language code (ISO 639-1), defaults to 'de'</p></li>
+<li><p><strong>target</strong> (<em>str</em><em>, </em><em>optional</em>) -- Target language code (ISO 639-1), defaults to 'en'</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Translated text or original text if translation fails</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p>No exceptions are raised as errors are caught internally</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="extraction.validate_city">
+<span class="sig-prename descclassname"><span class="pre">extraction.</span></span><span class="sig-name descname"><span class="pre">validate_city</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">city_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/extraction.html#validate_city"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#extraction.validate_city" title="Link to this definition"></a></dt>
+<dd><p>Check if city exists in offline database before translating it.</p>
+<p>This function normalizes and compares city names against an offline database
+to verify their existence before translation. It helps prevent translation errors
+that could lead to geographic misidentification (e.g., translating &quot;Hannover&quot;
+to &quot;Hanover&quot; which would incorrectly place it in the US instead of Germany).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>city_name</strong> (<em>str</em>) -- Name of the city to validate</p></li>
+<li><p><strong>world_data</strong> (<em>list</em>) -- Dictionary containing hierarchical country/state/city data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the city exists in the database, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p>The function performs Unicode normalization to handle special characters like
+umlauts, making the comparison case-insensitive and accent-insensitive.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sqlite.html" class="btn btn-neutral float-left" title="SQlite Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="model_selection.html" class="btn btn-neutral float-right" title="Model Selection and Implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Tom Ziegler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
