@@ -20,7 +20,6 @@ import os
 
 load_dotenv(override=True)  # Force reload and override existing env vars
 uri = os.environ.get("MONGODB_URI")  # Use os.environ.get instead of os.getenv
-#uri = "mongodb+srv://Tom:pwc123@scrapedata.4qouh.mongodb.net/?retryWrites=true&w=majority&appName=ScrapeData"
 
 # Add fallback and debug output
 if not uri or len(uri) < 20:  # Basic validation
