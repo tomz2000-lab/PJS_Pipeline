@@ -17,9 +17,11 @@
 - [👥 Contributions](#-contributions)
 
 
+
 # 🏃 General Idea and Motivation
 
 Mergers and acquisitions present substantial challenges for companies, especially in aligning compensation and benefits systems between merged organizations. PwC, as a leading German auditing and consulting firm, regularly addresses these issues during post-merger integration. Job advertisements offer valuable but unstructured data on current market compensation and benefits trends. Our project, in collaboration with PwC, developed an AI-powered tool that uses web scraping and NLP to collect and analyze this data efficiently. This tool provides PwC consultants with actionable, evidence-based insights to support fair and effective post-merger integration.
+
 
 
 ## 🏛️ Overview on my Part of the Project
@@ -33,6 +35,7 @@ Mergers and acquisitions present substantial challenges for companies, especiall
 This repository includes Python code, Docker support, and comprehensive documentation.
 
 
+
 ## ✨ Features
 
 - **Extracts job listing data** from MongoDB.
@@ -42,6 +45,8 @@ This repository includes Python code, Docker support, and comprehensive document
 - **Includes testing suite** for accuracy and recall evaluation.
 - **Detailed documentation** available via GitHub Pages.
 
+
+
 ## 💻 Technologies Used
 
 - **Python 3.x** – Core language for pipeline scripting and data processing.
@@ -50,6 +55,8 @@ This repository includes Python code, Docker support, and comprehensive document
 - **SQLite** – Lightweight database for structured data output.
 - **Docker** – Containerization for consistent deployment.
 - **GitHub Pages/Sphinx** – Hosting for documentation.
+
+
 
 ## 📁 Repository Structure
 
@@ -72,6 +79,7 @@ This repository includes Python code, Docker support, and comprehensive document
    - Dockerfile
    - Python-Code
    - ...
+
 
 
 ## ⚙️ Setup and Installation
@@ -124,19 +132,26 @@ sudo docker run --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~
 ```
 
 
+
 ## ▶️ Usage
 
 - **With Docker:** Follow the [Build and Run with Docker](#build-and-run-with-docker) steps.
 - **Locally:** After setting up dependencies and MongoDB, run the main-script.
+
+
 
 ## 📄 Documentation
 
 Detailed documentation is available at:  
 [https://tomz2000-lab.github.io/PJS_Pipeline/](https://tomz2000-lab.github.io/PJS_Pipeline/)
 
+
+
 ## 🧪 Testing
 
 The `testing/` folder contains all necessary code and files to evaluate the pipeline's accuracy and recall. See the documentation under Performance Moduel and Metrics for instructions.
+
+
 
 ## 👥 Contributions
 
@@ -148,6 +163,7 @@ My main tasks in this project were:
   Process and organize the extracted data into a coherent format suitable for further analysis and visualization.
 - **Loading the structured data into SQLite database**  
   Import the structured data into an SQLite database, ensuring it is ready for use by the project’s dashboard.
+
 
 
 *© Tom Ziegler, 2025*
