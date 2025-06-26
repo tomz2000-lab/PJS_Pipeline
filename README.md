@@ -76,20 +76,20 @@ This repository includes Python code, Docker support, and comprehensive document
 
 ## ⚙️ Setup and Installation
 
-### Prerequisites
+### 1. Prerequisites
 
 - **Docker** – Required for containerized deployment.
 - **MongoDB** – Local or cloud-hosted instance.
 - **SQLite** – Included with Python.
 
-### Clone the Repository
+### 2. Clone the Repository
 
 ```bash
 git clone https://github.com/tomz2000-lab/PJS_Pipeline.git
 cd PJS_Pipeline
 ```
 
-### Install Dependencies
+### 3. Install Dependencies
 
 For local use (without Docker):
 
@@ -97,27 +97,27 @@ For local use (without Docker):
 pip install -r requirements.txt
 ```
 
-### Configure Environment
+### 4. Configure Environment
 
 Ensure your MongoDB connection details are set (via a `.env` file).
 
 
-### Build and Run with Docker
+### 5. Build and Run with Docker
 
-Build the Docker image:
+5.1 Build the Docker image:
 
 ```bash
 sudo docker build -t my-pipeline .
 ```
 
-Run the container (with GPU support and persistent cache):
+5.2 Run the container (with GPU support and persistent cache):
 
 ```bash
 sudo docker run --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/docker-data/sqlite:/app/data my-pipeline
 ```
 
 
-To run every hour (via cron):
+5.3 To run every hour (via cron):
 
 ```bash
 0 * * * * sudo docker run --rm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/docker-data/sqlite:/app/data my-pipeline
