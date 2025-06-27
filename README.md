@@ -29,7 +29,7 @@ Mergers and acquisitions present substantial challenges for companies, especiall
 **PJS_Pipeline** is designed to process job listing data for analytical and dashboard purposes. The pipeline:
 
 - **Extracts raw data** from a MongoDB database.
-- **Processes and structures** the information using natural language processing (NLP) techniques.
+- **Processes and structures** the information using Natural Language Processing (NLP) techniques.
 - **Loads the structured data** into an SQLite database, making it accessible for visualization and analysis.
 
 This repository includes Python code, Docker support, and comprehensive documentation.
@@ -43,7 +43,7 @@ This repository includes Python code, Docker support, and comprehensive document
 - **Stores processed data** in SQLite for dashboard use.
 - **Containerized with Docker** for easy deployment.
 - **Includes testing suite** for accuracy and recall evaluation.
-- **Detailed documentation** available via GitHub Pages.
+- **Detailed documentation** available under [Documentation](#documentation).
 
 
 
@@ -89,6 +89,7 @@ This repository includes Python code, Docker support, and comprehensive document
 - **Docker** – Required for containerized deployment.
 - **MongoDB** – Local or cloud-hosted instance.
 - **SQLite** – Included with Python.
+- **Hadware** - Have at least 8 GB of VRAM available and a GPU supporting CUDA.
 
 ### 2. Clone the Repository
 
@@ -107,7 +108,7 @@ pip install -r requirements.txt
 
 ### 4. Configure Environment
 
-Ensure your MongoDB connection details are set (via a `.env` file).
+Ensure your MongoDB connection and Hugging-Face API-Key details are set in a `.env` file.
 
 
 ### 5. Build and Run with Docker
@@ -125,7 +126,7 @@ sudo docker run --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~
 ```
 
 
-5.3 To run every hour (via cron):
+5.3 To run every hour:
 
 ```bash
 0 * * * * sudo docker run --rm --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~/docker-data/sqlite:/app/data my-pipeline
@@ -136,7 +137,7 @@ sudo docker run --gpus all -v ~/.cache/huggingface:/root/.cache/huggingface -v ~
 ## ▶️ Usage
 
 - **With Docker:** Follow the [Build and Run with Docker](#build-and-run-with-docker) steps.
-- **Locally:** After setting up dependencies and MongoDB, run the main-script.
+- **Locally:** After setting up dependencies, MongoDB and Hugging-Face access, run `main.py`.
 
 
 
@@ -149,7 +150,7 @@ Detailed documentation is available at:
 
 ## 🧪 Testing
 
-The `testing/` folder contains all necessary code and files to evaluate the pipeline's accuracy and recall. See the documentation under Performance Moduel and Metrics for instructions.
+The `testing/` folder contains all necessary code and files to evaluate the pipeline's accuracy and recall. See the documentation under Performance Moduel and Metrics for instructions and explanations.
 
 
 
